@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ContactForm</string>
+    <string name="title_activity_all_contact_forms_screen">AllContactFormsScreen</string>
+</resources>
