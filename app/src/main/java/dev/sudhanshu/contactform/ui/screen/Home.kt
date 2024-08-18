@@ -25,6 +25,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
+import dev.sudhanshu.contactform.location.LocationManager
+import dev.sudhanshu.contactform.location.LocationManagerImpl
 import dev.sudhanshu.contactform.util.ActivityContextHolder
 
 
@@ -33,9 +35,15 @@ class Home : ComponentActivity() {
 
     private lateinit var contactFormViewModel: ContactFormViewModel
 
+    val locationManager: LocationManager by lazy {
+        LocationManagerImpl(this)
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 
         ActivityContextHolder.setActivityContext(this)
         contactFormViewModel = ViewModelProvider(this)[ContactFormViewModel::class.java]
@@ -71,7 +79,8 @@ class Home : ComponentActivity() {
                     padding.calculateTopPadding()
                     PermissionHandler(
                         viewModel = contactFormViewModel,
-                        permissionLauncher = permissionLauncher
+                        permissionLauncher = permissionLauncher,
+                        locationManager
                     )
 
                 }
@@ -88,7 +97,8 @@ class Home : ComponentActivity() {
 @Composable
 fun PermissionHandler(
     viewModel: ContactFormViewModel,
-    permissionLauncher: ActivityResultLauncher<Array<String>>
+    permissionLauncher: ActivityResultLauncher<Array<String>>,
+    locationManager: LocationManager
 ) {
     val permissionsGranted by viewModel.permissionsGranted.collectAsState()
 
@@ -97,7 +107,7 @@ fun PermissionHandler(
     }
 
     if (permissionsGranted) {
-        ContactFormScreen(viewModel)
+        ContactFormScreen(viewModel, locationManager)
     } else {
         PermissionRequestUI(permissionLauncher)
     }

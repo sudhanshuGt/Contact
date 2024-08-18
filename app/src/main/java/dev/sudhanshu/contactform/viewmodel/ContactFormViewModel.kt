@@ -4,6 +4,7 @@ package dev.sudhanshu.contactform.viewmodel
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dev.sudhanshu.contactform.data.model.FormData
 import dev.sudhanshu.contactform.data.repository.ContactFormRepository
+import dev.sudhanshu.contactform.util.ActivityContextHolder
 import dev.sudhanshu.contactform.util.AudioRecorder
-import dev.sudhanshu.contactform.util.GeotaggingUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -50,30 +53,39 @@ class ContactFormViewModel : ViewModel() {
         }
     }
 
-    private val _formList = MutableLiveData<List<FormData>>()
-    val formList: LiveData<List<FormData>> = _formList
+    private val _location = MutableStateFlow<Pair<Double, Double>?>(null)
+    val location: StateFlow<Pair<Double, Double>?> = _location.asStateFlow()
+
+    fun updateLocation(latitude: Double, longitude: Double) {
+        _location.value = Pair(latitude, longitude)
+    }
 
 
-    fun loadForm(){
-        viewModelScope.launch {
-            _formList.value = repository.getAllForms()
+    private val _fileNames = MutableLiveData<List<String>>()
+    val fileNames: LiveData<List<String>> get() = _fileNames
+
+
+
+    fun loadFileNames() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val names = repository.getAllJsonFileNames()
+            _fileNames.postValue(names)
         }
     }
 
 
     fun submitForm() {
         viewModelScope.launch {
-            val geoTag = GeotaggingUtil.getGeolocation()
-            val timestamp = SimpleDateFormat("dd_MM_yyyy_HH_mm_a", Locale.getDefault()).format(Date())
+             val timestamp = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
             submissionTime.value = timestamp
-
             val formData = FormData(
                 age = age.value.toInt(),
                 selfiePath = selfieUri.value.toString(),
                 recordingPath = recordingPath.value ?: "",
                 submitTime = timestamp
             )
-
+            selfieUri.value = null
+            recordingPath.value = null
             repository.saveFormData(formData)
         }
     }

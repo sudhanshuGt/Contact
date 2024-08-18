@@ -22,7 +22,7 @@ object FileUtils {
 
         val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val file = File(downloadDir, "contactForm_$currentDate.json")
-
+        FileHolder.setFileName("contactForm_$currentDate.json")
         try {
             // Writing JSON data to the file
             val json = Gson().toJson(formData)
@@ -35,6 +35,7 @@ object FileUtils {
         } catch (e: IOException) {
             Log.e("FileUtils", "Failed to save file: ${e.message}", e)
         }
+
     }
 }
 

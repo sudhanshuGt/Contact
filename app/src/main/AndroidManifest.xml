@@ -10,13 +10,6 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"
-        tools:ignore="ScopedStorage" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -29,6 +22,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ContactForm"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.screen.ContactSummary"
+            android:exported="false"
+            android:label="@string/title_activity_contact_summary"
+            android:theme="@style/Theme.ContactForm" />
         <activity
             android:name=".ui.screen.AllContactFormsScreen"
             android:exported="false"

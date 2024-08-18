@@ -1,9 +1,11 @@
 package dev.sudhanshu.contactform.data.model
 
+import com.google.gson.annotations.SerializedName
+
 
 data class FormData(
-    val age: Int,
-    val selfiePath: String,
-    val recordingPath: String,
-    val submitTime: String
+    @SerializedName("Q1") val age: Int,
+    @SerializedName("Q2") val selfiePath: String,
+    @SerializedName("recording") val recordingPath: String,
+    @SerializedName("submit_time") val submitTime: String
 )

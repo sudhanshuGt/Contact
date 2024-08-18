@@ -10,25 +10,16 @@ import dev.sudhanshu.contactform.util.FileUtils
 class ContactFormRepository() {
 
 
-    private val gson = Gson()
-
-
-    fun getAllForms(): List<FormData> {
+    fun getAllJsonFileNames(): List<String> {
         val downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val files = downloadDir.listFiles { file ->
-            file.name.matches(Regex("contactForm_\\d{2}_\\d{2}_\\d{4}_\\d{2}_\\d{2}_[AP]M\\.json"))
-        }?.sortedByDescending { it.lastModified() } ?: return emptyList()
-
-        val formList = mutableListOf<FormData>()
-        files.forEach { file ->
-            val json = file.readText()
-            val formData = gson.fromJson(json, FormData::class.java)
-            formList.add(formData)
+        val jsonFiles = downloadDir.listFiles { _, name ->
+           name.startsWith("contactForm_") && name.endsWith(".json")
         }
-        return formList
+
+        return jsonFiles?.map { it.name } ?: emptyList()
     }
 
-    fun saveFormData(formData: FormData) {
+    fun saveFormData(formData: FormData){
         ActivityContextHolder.getActivityContext()?.let { FileUtils.saveDataToFile(it, formData) }
     }
 }
