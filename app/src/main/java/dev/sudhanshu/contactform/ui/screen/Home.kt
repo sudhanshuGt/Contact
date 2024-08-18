@@ -18,12 +18,17 @@ import dev.sudhanshu.contactform.viewmodel.ContactFormViewModel
 
 
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import dev.sudhanshu.contactform.location.LocationManager
 import dev.sudhanshu.contactform.location.LocationManagerImpl
@@ -47,6 +52,8 @@ class Home : ComponentActivity() {
 
         ActivityContextHolder.setActivityContext(this)
         contactFormViewModel = ViewModelProvider(this)[ContactFormViewModel::class.java]
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true // Set light or dark status bar icons
+        window.statusBarColor = Color.Blue.toArgb()
 
         val permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -57,8 +64,12 @@ class Home : ComponentActivity() {
 
         setContent {
             ContactFormTheme {
-                Scaffold ( topBar = {
-                    TopAppBar(
+                Scaffold (
+                    modifier = Modifier.background(Color.White),
+                    topBar = {
+                    androidx.compose.material.TopAppBar(
+                        backgroundColor = MaterialTheme.colors.primary,
+                        elevation = 4.dp,
                         title = {
                             Text(
                                 text = "Contact Form",

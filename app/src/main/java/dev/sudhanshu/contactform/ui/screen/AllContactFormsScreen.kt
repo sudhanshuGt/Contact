@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,11 +38,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import dev.sudhanshu.contactform.R
 import dev.sudhanshu.contactform.data.model.FormData
@@ -59,19 +62,25 @@ class AllContactFormsScreen : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         viewModel.loadFileNames()
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true // Set light or dark status bar icons
+        window.statusBarColor = Color.Blue.toArgb()
+
 
         setContent {
             ContactFormTheme {
                 Scaffold(
+                    modifier = Modifier.background(Color.White),
                     topBar = {
-                        androidx.compose.material3.TopAppBar(
-                            title = {
+                         TopAppBar(
+                             title = {
                                 Text(
                                     text = "All Contact Forms",
                                     modifier = Modifier.fillMaxWidth(),
                                     color = Color.White
                                 )
                             },
+                            backgroundColor = MaterialTheme.colors.primary,
+                            elevation = 4.dp
                         )
                     }
                 ) { innerPadding ->

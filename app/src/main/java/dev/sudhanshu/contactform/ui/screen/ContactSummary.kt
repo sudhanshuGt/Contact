@@ -32,9 +32,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import androidx.core.view.WindowCompat
 import coil.compose.rememberImagePainter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -49,6 +51,9 @@ class ContactSummary : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = true // Set light or dark status bar icons
+        window.statusBarColor = Color.Blue.toArgb()
+
         val fileName = intent.getStringExtra("fileName") ?: FileHolder.getFileName()
         if (fileName != null) {
             Log.i("--ContactFile--", fileName)
@@ -57,8 +62,10 @@ class ContactSummary : ComponentActivity() {
         setContent {
             ContactFormTheme {
                 Scaffold(
+                    modifier = Modifier.background(Color.White),
                     topBar = {
                         TopAppBar(
+                            modifier = Modifier.background(color = Color.Blue),
                             title = {
                                 androidx.compose.material3.Text(
                                     text = "Contact Summary",
